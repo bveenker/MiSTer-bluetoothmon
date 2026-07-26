@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+LOGFILE=/tmp/${0##*/}.log
+PIDFILE=/tmp/${0##*/}.pid
+
 get_connected_bt_devices() {
     local count=0
 
@@ -14,7 +17,7 @@ get_connected_bt_devices() {
 
 install() {
   if ! grep -q "# bveenker/bluetoothmon" /media/fat/linux/user-startup.sh ; then
-    echo Installing ${0##*/}... >> /tmp/${0##*/}.log
+    echo Installing ${0##*/}... >> $LOGFILE
     echo '
 # bveenker/bluetoothmon
 [[ -e /media/fat/Scripts/bluetoothmon.sh ]] && /media/fat/Scripts/bluetoothmon.sh $1 &' >> /media/fat/linux/user-startup.sh
@@ -23,25 +26,25 @@ install() {
 }
 
 start() {
-  echo Starting ${0##*/}... >> /tmp/${0##*/}.log
+  echo Starting ${0##*/}... >> $LOGFILE
 
-  echo "$$" > /tmp/${0##*/}.pid
+  echo "$$" > $PIDFILE
   
   total_connected=0
   while true; do
 	
-	echo there are no bluetooth devices >> /tmp/${0##*/}.log
+	echo there are no bluetooth devices >> $LOGFILE
     while [ $total_connected -eq "0" ]; do
-	  echo reset bluetooth >> /tmp/${0##*/}.log
-	  bluetoothctl power off >> /tmp/${0##*/}.log
+	  echo reset bluetooth >> $LOGFILE
+	  bluetoothctl power off >> $LOGFILE
 	  sleep 1
-	  bluetoothctl power on >> /tmp/${0##*/}.log
+	  bluetoothctl power on >> $LOGFILE
 	  
       sleep 10
 	  total_connected=$(get_connected_bt_devices)
     done
 	
-	echo there is at least one connected. wait until there are none  >> /tmp/${0##*/}.log
+	echo there is at least one connected. wait until there are none  >> $LOGFILE
     while [ $total_connected -ne "0" ]; do
       sleep 10
 	  total_connected=$(get_connected_bt_devices)
@@ -52,16 +55,16 @@ start() {
 }
 
 stop() {
-  echo Stopping ${0##*/}... >> /tmp/${0##*/}.log
+  echo Stopping ${0##*/}... >> $LOGFILE
   
-  if [[ -f /tmp/${0##*/}.pid ]]; then
-    kill "$(cat /tmp/${0##*/}.pid)"
-    rm -f /tmp/${0##*/}.pid
+  if [[ -f $PIDFILE ]]; then
+    kill "$(cat $PIDFILE)"
+    rm -f $PIDFILE
   fi
 }
 
 restart() {
-  echo Restarting ${0##*/}... >> /tmp/${0##*/}.log
+  echo Restarting ${0##*/}... >> $LOGFILE
   stop
   ${0} start &
 }
