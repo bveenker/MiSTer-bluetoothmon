@@ -70,7 +70,12 @@ restart() {
 
 main() {
   install
-  ${0} start &
+  if [ -z "$1" ]; then
+    ${0} start &
+  else
+    "${1}"
+  fi
 }
 
 main "${@}"
+
