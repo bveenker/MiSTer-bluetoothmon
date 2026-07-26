@@ -30,8 +30,13 @@ start() {
   total_connected=0
   while true; do
 	
-	echo there are no bluetooth devices. wait until there is one >> /tmp/${0##*/}.log
+	echo there are no bluetooth devices >> /tmp/${0##*/}.log
     while [ $total_connected -eq "0" ]; do
+	  echo reset bluetooth >> /tmp/${0##*/}.log
+	  bluetoothctl power off >> /tmp/${0##*/}.log
+	  sleep 1
+	  bluetoothctl power on >> /tmp/${0##*/}.log
+	  
       sleep 10
 	  total_connected=$(get_connected_bt_devices)
     done
@@ -41,13 +46,6 @@ start() {
       sleep 10
 	  total_connected=$(get_connected_bt_devices)
     done
-
-	echo there are no bluetooth devices >> /tmp/${0##*/}.log
-
-	echo reset bluetooth >> /tmp/${0##*/}.log
-	bluetoothctl power off
-	sleep 1
-	bluetoothctl power on
 	
   done
   
