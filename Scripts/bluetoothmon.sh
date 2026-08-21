@@ -2,6 +2,7 @@
 
 LOGFILE=/tmp/${0##*/}.log
 PIDFILE=/tmp/${0##*/}.pid
+CHECKINTERVAL=60
 
 get_connected_bt_devices() {
     local count=0
@@ -40,13 +41,13 @@ start() {
 	  sleep 1
 	  bluetoothctl power on >> $LOGFILE
 	  
-      sleep 10
+      sleep $CHECKINTERVAL
 	  total_connected=$(get_connected_bt_devices)
     done
 	
 	echo there is at least one connected. wait until there are none  >> $LOGFILE
     while [ $total_connected -ne "0" ]; do
-      sleep 10
+      sleep $CHECKINTERVAL
 	  total_connected=$(get_connected_bt_devices)
     done
 	
