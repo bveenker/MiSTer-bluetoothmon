@@ -32,7 +32,19 @@ start() {
   echo "$$" > $PIDFILE
   
   total_connected=0
+  
+  echo start. wait until at least one device connects >> $LOGFILE
+  while [ $total_connected -eq "0" ]; do
+    sleep $CHECKINTERVAL
+	total_connected=$(get_connected_bt_devices)
+  done
+
   while true; do
+	echo there is at least one connected. wait until there are none  >> $LOGFILE
+    while [ $total_connected -ne "0" ]; do
+      sleep $CHECKINTERVAL
+	  total_connected=$(get_connected_bt_devices)
+    done
 	
 	echo there are no bluetooth devices >> $LOGFILE
     while [ $total_connected -eq "0" ]; do
@@ -44,13 +56,6 @@ start() {
       sleep $CHECKINTERVAL
 	  total_connected=$(get_connected_bt_devices)
     done
-	
-	echo there is at least one connected. wait until there are none  >> $LOGFILE
-    while [ $total_connected -ne "0" ]; do
-      sleep $CHECKINTERVAL
-	  total_connected=$(get_connected_bt_devices)
-    done
-	
   done
   
 }
