@@ -1,6 +1,6 @@
 # MiSTer-bluetoothmon
 
-UPDATE: This script works, but there is a better way to deal with troublesome BlueTooth devices on MiSTer. In MiSTer.ini, edit the bt_auto_disconnect value. Use a short value (say, 3 minutes) at first, then gradually increase. You want the MiSTer to disconnect idle devices before they timeout on their own. I like 10 minutes.
+UPDATE: This script works, but there is a better way to deal with troublesome BlueTooth devices on MiSTer. In MiSTer.ini, edit the bt_auto_disconnect value. Use a short value (say, 3 minutes) at first, then gradually increase. You want the MiSTer to disconnect idle devices before they timeout on their own. I like 5 minutes.
 
 A script that resets bluetooth when the last device disconnects
 
